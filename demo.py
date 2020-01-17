@@ -4,6 +4,7 @@ import pandas as pd
 import sys
 from dataProcessing import create_dataframe
 
+
 def main():
     data = pd.read_csv("train_data.csv")
     X_train, X_test, y_train, y_test = train_test_split(data[["base64SD/len", "strings_min_4"]].to_numpy(),
@@ -12,6 +13,7 @@ def main():
     for item in sys.argv:
         data = create_dataframe.create_dataframe_demo(item)
         print(f"file name: {item}\nresult: {decision_tree_model.predict(data[['base64SD/len', 'strings_min_4']])}\n")
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 0:
