@@ -1,5 +1,6 @@
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
+from dataProcessing import create_dataframe
 from dataProcessing import strings
 import numpy as np
 import base64
@@ -22,34 +23,11 @@ def main():
     test_data = pd.DataFrame(columns=column_names)
 
     for root, subdirs, files in os.walk(directory_to_inspect):
-        print(f"files: {files}")
         for file_ in files:
             path = os.path.join(root, file_)
-            try:
-                data_file = open(path, "rb")
-                data = data_file.read()
-                encoded_string = base64.b64encode(data)
-                num_set = []
-                for i in range(0, len(BASE64)):
-                    count_ = encoded_string.count(BASE64[i])
-                    num_set.append(count_)
-                sd = np.std(num_set)
-                strings_len = strings.strings(str(data))
-                if len(encoded_string) == 0:
-                    temp = 1
-                else:
-                    temp = len(encoded_string)
-                test_data = test_data.append(
-                    {'filename': path, "base64SD/len": sd / temp, "strings_min_4": strings_len}, ignore_index=True)
-            except Exception as inst:
-                print(type(inst))
-                pass
-            else:
-                data_file.close()
-        for index, row in test_data.iterrows():
-            row_ = row.to_frame()
-            decision = decision_tree_model.predict(row_[["base64SD/len", "strings_min_4"]])
-            print(f"{row['filename']}: {'ENCRYPTED' if decision else 'UNENCRYPTED'}")
+            df = create_dataframe.create_dataframe_demo(path)
+            decision = decision_tree_model.predict(data[['base64SD/len', 'strings_min_4']])
+            print(f"{path}: {'ENCRYPTED' if decision[0] else 'UNENCRYPTED'} \t\t\tCertainty: {decision_tree_model.predict_proba(data[['base64SD/len', 'strings_min_4']])[0][0]*100}%")
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
