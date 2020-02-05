@@ -26,8 +26,9 @@ def main():
         for file_ in files:
             path = os.path.join(root, file_)
             df = create_dataframe.create_dataframe_demo(path)
-            decision = decision_tree_model.predict(data[['base64SD/len', 'strings_min_4']])
-            print(f"{path}: {'ENCRYPTED' if decision[0] else 'UNENCRYPTED'} \t\t\tCertainty: {decision_tree_model.predict_proba(data[['base64SD/len', 'strings_min_4']])[0][0]*100}%")
+            decision = decision_tree_model.predict(df[['base64SD/len', 'strings_min_4']].to_numpy())
+            print(len(decision))
+            print(f"{path}: {'ENCRYPTED' if decision[0] else 'UNENCRYPTED'}")
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
