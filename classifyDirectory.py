@@ -30,6 +30,23 @@ def main():
             print(len(decision))
             print(f"{path}: {'ENCRYPTED' if decision[0] else 'UNENCRYPTED'}")
 
+def classify_directory(fileToClassify, data):
+    data = pd.read_csv(data)
+    X_train, X_test, y_train, y_test = train_test_split(data[["base64SD/len", "strings_min_4"]].to_numpy(),
+                                                        data["isEncrypted"].to_numpy(), test_size=0.33, random_state=42)
+    decision_tree_model = DecisionTreeClassifier().fit(X_train.reshape(-1, 2), y_train)
+    directory_to_inspect = fileToClassify
+    column_names = ["filename", "base64SD/len", "strings_min_4"]
+    test_data = pd.DataFrame(columns=column_names)
+
+    for root, subdirs, files in os.walk(directory_to_inspect):
+        for file_ in files:
+            path = os.path.join(root, file_)
+            df = create_dataframe.create_dataframe_demo(path)
+            decision = decision_tree_model.predict(df[['base64SD/len', 'strings_min_4']].to_numpy())
+            print(len(decision))
+            print(f"{path}: {'ENCRYPTED' if decision[0] else 'UNENCRYPTED'}")
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print("Enter an argument")
