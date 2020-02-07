@@ -27,11 +27,10 @@ def main():
             path = os.path.join(root, file_)
             df = create_dataframe.create_dataframe_demo(path)
             decision = decision_tree_model.predict(df[['base64SD/len', 'strings_min_4']].to_numpy())
-            print(len(decision))
             print(f"{path}: {'ENCRYPTED' if decision[0] else 'UNENCRYPTED'}")
 
-def classify_directory(fileToClassify, data):
-    data = pd.read_csv(data)
+def classify_directory(fileToClassify, dataPath):
+    data = pd.read_csv(dataPath)
     X_train, X_test, y_train, y_test = train_test_split(data[["base64SD/len", "strings_min_4"]].to_numpy(),
                                                         data["isEncrypted"].to_numpy(), test_size=0.33, random_state=42)
     decision_tree_model = DecisionTreeClassifier().fit(X_train.reshape(-1, 2), y_train)
@@ -44,7 +43,6 @@ def classify_directory(fileToClassify, data):
             path = os.path.join(root, file_)
             df = create_dataframe.create_dataframe_demo(path)
             decision = decision_tree_model.predict(df[['base64SD/len', 'strings_min_4']].to_numpy())
-            print(len(decision))
             print(f"{path}: {'ENCRYPTED' if decision[0] else 'UNENCRYPTED'}")
 
 if __name__ == "__main__":

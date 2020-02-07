@@ -11,7 +11,8 @@ train_data = r"../train_data.csv"
 for bucket in response['Buckets']:
     my_bucket = s3_buck.Bucket(bucket["Name"])
     for bucket_object in my_bucket.objects.all():
-        path = rf"../temp/{bucket_object.key}"
-        s3.download_file(my_bucket.name, bucket_object.key, path)
-        classifyDirectory.classify_directory(path, train_data)
-        os.remove(path)
+        if "." in bucket_object.key:
+            filename = bucket_object.key.split('/')[-1]
+            s3.download_file(my_bucket.name, bucket_object.key, f"../temp/{filename}")
+            classifyDirectory.classify_directory("../temp", train_data)
+            os.remove(f"../temp/{filename}")
