@@ -37,7 +37,7 @@ def classify_directory(fileToClassify, dataPath):
     directory_to_inspect = fileToClassify
     column_names = ["filename", "base64SD/len", "strings_min_4"]
     test_data = pd.DataFrame(columns=column_names)
-
+    print(directory_to_inspect)
     for root, subdirs, files in os.walk(directory_to_inspect):
         for file_ in files:
             path = os.path.join(root, file_)
